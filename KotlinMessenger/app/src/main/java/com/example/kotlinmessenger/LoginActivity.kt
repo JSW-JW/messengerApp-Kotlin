@@ -1,5 +1,6 @@
 package com.example.kotlinmessenger
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,8 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener {
                     if(!it.isSuccessful) return@addOnCompleteListener
                     Log.d("Main", "Sign in Success with $email")
+                    val intent = Intent(this, LatestMessagesActivity::class.java)
+                    startActivity(intent)
                 }
                 .addOnFailureListener {
                     Log.d("Main", "Failed to log in : ${it.message}")
