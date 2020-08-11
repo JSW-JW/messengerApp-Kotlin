@@ -1,11 +1,11 @@
-package com.example.kotlinmessenger
+package com.example.kotlinmessenger.messages
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.kotlinmessenger.R
+import com.example.kotlinmessenger.models.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -34,6 +34,10 @@ class NewMessageActivity : AppCompatActivity() {
 
         fetchUsers()
     }
+
+    companion object {
+        val USER_KEY = "USER_KEY"
+    }
     private fun fetchUsers() {
         val ref = FirebaseDatabase.getInstance().getReference("/user")
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -41,17 +45,29 @@ class NewMessageActivity : AppCompatActivity() {
                 val adapter = GroupAdapter<GroupieViewHolder>()
 
                 snapshot.children.forEach {
-                    Log.d("NewMessage", it.toString())
+//                    Log.d("NewMessage", it.toString())
                     val user = it.getValue(User::class.java)
                     if(user != null) {
                         adapter.add(UserItem(user))
                     }
                 }
 
+                adapter.setOnItemClickListener { item, view ->
+
+                    val useritem = item as UserItem
+
+                    val intent = Intent(view.context, ChatLogActivity::class.java)
+//                    intent.putExtra(USER_KEY, useritem.user.username)
+                    intent.putExtra(USER_KEY, useritem.user)
+                    startActivity(intent)
+
+                    finish()
+                }
+
                 recyclerview_newmessage.adapter = adapter
             }
             override fun onCancelled(error: DatabaseError) {
-
+                Log.d("NewMessage", "Failed to load from DataBase")
             }
         })
     }
