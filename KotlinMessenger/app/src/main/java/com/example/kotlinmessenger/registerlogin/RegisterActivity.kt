@@ -100,7 +100,7 @@ class RegisterActivity : AppCompatActivity() {
                     Log.d("RegisterActivity", "File Location : $it")
 
                     saveUserToFireBaseDataBase(it.toString())
-                }
+            }
                     .addOnFailureListener {
                         Log.d("RegisterActivity", "Failed to upload Image to FirebaseStorage")
                     }
